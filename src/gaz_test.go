@@ -8,10 +8,9 @@ import (
 
 
 
-func TestAsserts(t *testing.T) {
+func TestConnections(t *testing.T) {
 	db := mymy.New("tcp", "", "127.0.0.1:3306", "root", "root", "test")
-	defer db.Close()
 	conn := &MySql{db}
-
-	assert.Equal(t, nil, conn.Connect())
+	defer conn.db.Close()
+	assert.Equal(t, nil, conn.db.Connect())
 }
