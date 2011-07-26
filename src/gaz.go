@@ -1,5 +1,7 @@
 package gaz
 
-type Point struct {
-    x, y int
-}
+import mymy "github.com/ziutek/mymysql"
+
+type MySql mymy.MySQL
+
+
