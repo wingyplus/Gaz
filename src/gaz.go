@@ -15,3 +15,7 @@ func(m *MySql) Query(query string) interface{} {
 	
 	return rows
 }
+
+func(m *MySql) Insert(p interface{}) (interface{}, bool) {}
+
+func(m *MySql) Get(id string) interface{} {}
