@@ -1,16 +1,23 @@
 package gaz
 
-import (
+import (	
+	"fmt"
 	"testing"
-	"github.com/bmizerany/assert"
+//	"github.com/bmizerany/assert"
 	mymy "github.com/ziutek/mymysql"
 )
 
 
 
-func TestConnections(t *testing.T) {
-	db := mymy.New("tcp", "", "127.0.0.1:3306", "root", "root", "test")
-	conn := &MySql{db}
-	defer conn.db.Close()
-	assert.Equal(t, nil, conn.db.Connect())
+func TestQuery(t *testing.T) {
+	conn := new(MySql)
+	rows := conn.Query("select * from User").([]*mymy.Row)
+//	fmt.Printf ("%T\n", rows)
+	
+	for _, row := range rows {
+		for _, col := range row.Data {
+			fmt.Printf ("%v ", string(col.([]byte)))
+		}
+		fmt.Println()
+	}
 }
