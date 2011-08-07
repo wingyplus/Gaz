@@ -22,5 +22,6 @@ func TestQuery(t *testing.T) {
 }
 
 func TestInsert(t *testing.T) {
+	conn := new(MySql)
 	
 }
