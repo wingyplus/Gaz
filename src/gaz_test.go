@@ -12,7 +12,6 @@ import (
 func TestQuery(t *testing.T) {
 	conn := new(MySql)
 	rows := conn.Query("select * from User").([]*mymy.Row)
-//	fmt.Printf ("%T\n", rows)
 	
 	for _, row := range rows {
 		for _, col := range row.Data {
@@ -20,4 +19,8 @@ func TestQuery(t *testing.T) {
 		}
 		fmt.Println()
 	}
+}
+
+func TestInsert(t *testing.T) {
+	
 }
