@@ -7,20 +7,28 @@ type MySql struct {
 }
 
 const (
-	proto    = "tcp",
-	laddr    = "",
-	raddr    = "127.0.0.1:3306",
-	user     = "root",
-	pass     = "root",
-	database = "test",
+	proto    = "tcp"
+	laddr    = ""
+	raddr    = "127.0.0.1:3306"
+	user     = "root"
+	pass     = "root"
+	db		 = "test"
 )
 
+func(m *MySql) new() {
+	m.MySQL = mymy.New(proto, laddr, raddr, user, pass, db)
+}
+
+func(m *MySql) close() {
+	m.Close()
+}
+
 func(m *MySql) Query(query string) interface{} {
-	m.MySQL = mymy.New("tcp", "", "127.0.0.1:3306", "root", "root", "test")
+	m.new()
 	if err := m.Connect() ; err != nil {
 		panic("cannot connect")
 	}
-	defer m.MySQL.Close()
+	defer m.close()
 	
 	rows, _, err := m.MySQL.Query(query)
 	
