@@ -1,5 +1,6 @@
 package gaz
 
+import "fmt"
 import mymy "github.com/ziutek/mymysql"
 
 type MySql struct {
@@ -12,7 +13,7 @@ const (
 	raddr    = "127.0.0.1:3306"
 	user     = "root"
 	pass     = "root"
-	db		 = "test"
+	db       = "test"
 )
 
 func(m *MySql) new() {
@@ -40,6 +41,11 @@ func(m *MySql) Query(query string) interface{} {
 }
 
 func(m *MySql) Insert(p interface{}) (interface{}, bool) {
+	m.new()
+	if err := m.Connect() ; err != nil {
+		panic("cannot connect")
+	}
+	defer m.close()
     return true, true
 }
 
