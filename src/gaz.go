@@ -1,6 +1,6 @@
 package gaz
 
-import "fmt"
+//import "fmt"
 import "strconv"
 import mymy "github.com/ziutek/mymysql"
 
@@ -49,18 +49,14 @@ func(m *MySql) Insert(p interface{}) (interface{}, bool) {
 	defer m.close()
 	
 	data := p.(map[string]string)
-	
 	rows, _, _ := m.MySQL.Query("SELECT * FROM User")
 	
 	query := "INSERT INTO User(id, email, name, password) VALUES (" + strconv.Itoa(len(rows)+1)
-	
 	for _, value := range data {
 		query += "," + "'" + value + "'"
 	}
 	query += ")"
-	
-	fmt.Println(query)
-	
+	//fmt.Println(query)
 	_, _, err := m.MySQL.Query(query)
 	if(err != nil) {
 		return err, false
@@ -70,5 +66,16 @@ func(m *MySql) Insert(p interface{}) (interface{}, bool) {
 }
 
 func(m *MySql) Get(id string) interface{} {
-	return true
+	m.new()
+	if err := m.Connect() ; err != nil {
+		panic("cannot connect")
+	}
+	defer m.close()
+	
+	rows, _, err := m.MySQL.Query("SELECT * FROM User WHERE id=" + id)
+	if err != nil {
+		panic(err)
+	}
+	
+	return rows[0]
 }
