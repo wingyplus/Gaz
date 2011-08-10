@@ -1,6 +1,5 @@
 package gaz
 
-//import "fmt"
 import "strconv"
 import mymy "github.com/ziutek/mymysql"
 
@@ -56,7 +55,7 @@ func(m *MySql) Insert(p interface{}) (interface{}, bool) {
 		query += "," + "'" + value + "'"
 	}
 	query += ")"
-	//fmt.Println(query)
+	
 	_, _, err := m.MySQL.Query(query)
 	if(err != nil) {
 		return err, false
