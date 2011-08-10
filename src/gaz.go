@@ -65,20 +65,12 @@ func(m *MySql) Insert(p interface{}) (interface{}, bool) {
 }
 
 func(m *MySql) Get(id string) interface{} {
-	m.new()
-	if err := m.Connect() ; err != nil {
-		panic("cannot connect")
-	}
-	defer m.close()
-	
-	rows, _, err := m.MySQL.Query("SELECT * FROM User WHERE id=" + id)
-	if err != nil {
-		panic(err)
-	}
+	rows := m.Query("SELECT * FROM User WHERE id=" + id).([]*mymy.Row)
 	
 	return rows[0]
 }
-
+/*
 func(m *MySql) FindOne(p Params) interface{} {
 	
 }
+*/
