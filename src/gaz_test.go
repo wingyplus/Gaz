@@ -22,6 +22,12 @@ func TestQuery(t *testing.T) {
 }
 
 func TestInsert(t *testing.T) {
-	//conn := new(MySql)
+	conn := new(MySql)
+	data := map[string]string {"name":"grean", "password":"1234", "email":"hello@grean.com"}
 	
+	err, ok := conn.Insert(data)
+	if !ok {
+		panic(err)
+	}
 }
+
