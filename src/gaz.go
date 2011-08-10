@@ -52,7 +52,7 @@ func(m *MySql) Insert(p interface{}) (interface{}, bool) {
 	
 	rows, _, _ := m.MySQL.Query("SELECT * FROM User")
 	
-	query := "INSERT INTO User VALUES (" + strconv.Itoa(len(rows)+1)
+	query := "INSERT INTO User(id, email, name, password) VALUES (" + strconv.Itoa(len(rows)+1)
 	
 	for _, value := range data {
 		query += "," + "'" + value + "'"
