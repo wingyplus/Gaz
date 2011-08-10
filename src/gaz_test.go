@@ -37,3 +37,7 @@ func TestGet(t *testing.T) {
 	assert.Equal(t, "barzaar", row.Str(1))
 	assert.Equal(t, "hello@bazaar.com", row.Str(3))
 }
+
+func TestFindOne(t *testing.T) {
+	
+}

@@ -78,3 +78,7 @@ func(m *MySql) Get(id string) interface{} {
 	
 	return rows[0]
 }
+
+func(m *MySql) FindOne(p Params) interface{} {
+	
+}
