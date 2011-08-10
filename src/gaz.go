@@ -7,6 +7,8 @@ type MySql struct {
 	*mymy.MySQL
 }
 
+type Params map[string]interface{}
+
 const (
 	proto    = "tcp"
 	laddr    = ""
@@ -69,8 +71,14 @@ func(m *MySql) Get(id string) interface{} {
 	
 	return rows[0]
 }
-/*
+
 func(m *MySql) FindOne(p Params) interface{} {
+	query := "SELECT * FROM User WHERE "
+	for key, value := range p {
+		query += key + "='" + value.(string) + "'"
+	}
 	
+	rows := m.Query(query).([]*mymy.Row)
+	return rows[0]
 }
-*/
+

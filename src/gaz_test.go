@@ -39,5 +39,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestFindOne(t *testing.T) {
-	
+	conn := new(MySql)
+	row := conn.FindOne(Params{"name":"grean"}).(*mymy.Row)
+	assert.Equal(t, "hello1@grean.com", row.Str(3))
 }
