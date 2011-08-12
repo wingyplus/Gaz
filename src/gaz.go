@@ -1,6 +1,6 @@
 package gaz
 
-import "strconv"
+//import "strconv"
 import mymy "github.com/ziutek/mymysql"
 
 type Connection struct {
@@ -9,11 +9,11 @@ type Connection struct {
 
 type Database struct {
 	Connection *Connection
-	name       string
+	db         string
 }
 
 type DataSet struct {
-	DB         Database
+	DB         *Database
 	Name       string
 }
 
@@ -56,30 +56,30 @@ func (database Database) C(name string) Collection {
 }
 */
 
-func(m *Connection) DB(db string) Databases {
+func(m *Connection) DB(db string) *Database {
 	return &Database{m, db}
 }
 
-func(datastore *Database) C(table string) DataSet {
-	return &DataSet{datastore, table}
+func(database *Database) C(table string) *DataSet {
+	return &DataSet{database, table}
 }
 
-func(m *Connection) new() {
-	m.MySQL = mymy.New(proto, laddr, raddr, user, pass, db)
+func(database *Database) new() {
+	database.Connection.MySQL = mymy.New(proto, laddr, raddr, user, pass, database.db)
 }
 
-func(m *Connection) close() {
-	m.Close()
+func(database *Database) close() {
+	database.Connection.Close()
 }
 
-func(m *Connection) Query(query string) interface{} {
-	m.new()
-	if err := m.Connect() ; err != nil {
+func(database *Database) Query(query string) interface{} {
+	database.new()
+	if err := database.Connection.Connect() ; err != nil {
 		panic("cannot connect")
 	}
-	defer m.close()
+	defer database.close()
 	
-	rows, _, err := m.MySQL.Query(query)
+	rows, _, err := database.Connection.MySQL.Query(query)
 	
 	if err != nil {
 		panic(err)
@@ -87,8 +87,8 @@ func(m *Connection) Query(query string) interface{} {
 	
 	return rows
 }
-
-func(m *Connection) Insert(p interface{}) (interface{}, bool) {
+/*
+func(m *Connection) insert(p interface{}, table string) (interface{}, bool) {
 	m.new()
 	if err := m.Connect() ; err != nil {
 		panic("cannot connect")
@@ -96,9 +96,9 @@ func(m *Connection) Insert(p interface{}) (interface{}, bool) {
 	defer m.close()
 	
 	data := p.(map[string]string)
-	rows, _, _ := m.MySQL.Query("SELECT * FROM User")
+	rows, _, _ := m.MySQL.Query("SELECT * FROM " + table)
 	
-	query := "INSERT INTO User(id, email, name, password) VALUES (" + strconv.Itoa(len(rows)+1)
+	query := "INSERT INTO " + table + "(id, email, name, password) VALUES (" + strconv.Itoa(len(rows)+1)
 	for _, value := range data {
 		query += "," + "'" + value + "'"
 	}
@@ -112,13 +112,13 @@ func(m *Connection) Insert(p interface{}) (interface{}, bool) {
 	return nil, true
 }
 
-func(m *Connection) Get(id string) interface{} {
+func(m *Connection) get(id string) interface{} {
 	rows := m.Query("SELECT * FROM User WHERE id=" + id).([]*mymy.Row)
 	
 	return rows[0]
 }
 
-func(m *Connection) FindOne(p Params) interface{} {
+func(m *Connection) findOne(p Params) interface{} {
 	query := "SELECT * FROM User WHERE "
 	for key, value := range p {
 		query += key + "='" + value.(string) + "'"
@@ -127,3 +127,4 @@ func(m *Connection) FindOne(p Params) interface{} {
 	rows := m.Query(query).([]*mymy.Row)
 	return rows[0]
 }
+*/
