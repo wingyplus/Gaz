@@ -8,6 +8,7 @@ type Connection struct {
 }
 
 type DataStore struct {
+	Connection *Connection
 	name       string
 }
 
@@ -16,11 +17,13 @@ type Database struct {
 	Name       string
 }
 
+/*
 type MySql struct {
 	Connection *Connection
 	DB         DataStore
 	Table      Database
 }
+*/
 
 type Params map[string]interface{}
 
@@ -30,7 +33,6 @@ const (
 	raddr    = "127.0.0.1:3306"
 	user     = "root"
 	pass     = "root"
-	db       = "test"
 )
 
 /*
