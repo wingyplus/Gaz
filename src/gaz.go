@@ -7,10 +7,19 @@ type Connection struct {
 	*mymy.MySQL
 }
 
+type DataStore struct {
+	name       string
+}
+
+type Database struct {
+	DB         DataStore
+	Name       string
+}
+
 type MySql struct {
-	connection *Connection
-	db         string
-	table      string
+	Connection *Connection
+	DB         DataStore
+	Table      Database
 }
 
 type Params map[string]interface{}
@@ -23,6 +32,27 @@ const (
 	pass     = "root"
 	db       = "test"
 )
+
+/*
+type Database struct {
+	Session *Session
+	Name    string
+}
+
+type Collection struct {
+	DB       Database
+	Name     string // "collection"
+	FullName string // "db.collection"
+}
+
+func (session *Session) DB(name string) Database {
+	return Database{session, name}
+}
+
+func (database Database) C(name string) Collection {
+	return Collection{database, name, database.Name + "." + name}
+}
+*/
 
 func(m *MySql) DB(db string) Database {}
 
