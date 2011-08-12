@@ -17,14 +17,6 @@ type DataSet struct {
 	table_name string
 }
 
-/*
-type MySql struct {
-	Connection *Connection
-	DB         DataStore
-	Table      Database
-}
-*/
-
 type Params map[string]interface{}
 
 const (
@@ -34,27 +26,6 @@ const (
 	user     = "root"
 	pass     = "root"
 )
-
-/*
-type Database struct {
-	Session *Session
-	Name    string
-}
-
-type Collection struct {
-	DB       Database
-	Name     string // "collection"
-	FullName string // "db.collection"
-}
-
-func (session *Session) DB(name string) Database {
-	return Database{session, name}
-}
-
-func (database Database) C(name string) Collection {
-	return Collection{database, name, database.Name + "." + name}
-}
-*/
 
 func(m *Connection) DB(db string) *Database {
 	return &Database{m, db}
