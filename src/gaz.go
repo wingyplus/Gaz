@@ -117,14 +117,14 @@ func(dataset *DataSet) Get(id string) interface{} {
 	
 	return rows[0]
 }
-/*
-func(m *Connection) findOne(p Params) interface{} {
-	query := "SELECT * FROM User WHERE "
+
+func(dataset *DataSet) FindOne(p Params) interface{} {
+	query := "SELECT * FROM " + dataset.table_name + " WHERE "
 	for key, value := range p {
 		query += key + "='" + value.(string) + "'"
 	}
 	
-	rows := m.Query(query).([]*mymy.Row)
+	rows := dataset.db.Query(query).([]*mymy.Row)
 	return rows[0]
 }
-*/
+

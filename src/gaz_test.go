@@ -38,10 +38,9 @@ func TestGet(t *testing.T) {
 	assert.Equal(t, "barzaar", row.Str(1))
 	assert.Equal(t, "hello@bazaar.com", row.Str(3))
 }
-/*
+
 func TestFindOne(t *testing.T) {
-	conn := new(Connection)
-	row := conn.FindOne(Params{"name":"grean"}).(*mymy.Row)
+	dataset := new(Connection).DB("test").C("User")
+	row := dataset.FindOne(Params{"name":"grean"}).(*mymy.Row)
 	assert.Equal(t, "hello1@grean.com", row.Str(3))
 }
-*/
