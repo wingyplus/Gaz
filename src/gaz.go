@@ -7,6 +7,12 @@ type Connection struct {
 	*mymy.MySQL
 }
 
+type MySql struct {
+	connection *Connection
+	db         string
+	table      string
+}
+
 type Params map[string]interface{}
 
 const (
