@@ -1,6 +1,6 @@
 package gaz
 
-//import "strconv"
+import "strconv"
 import mymy "github.com/ziutek/mymysql"
 
 type Connection struct {
@@ -8,13 +8,13 @@ type Connection struct {
 }
 
 type Database struct {
-	Connection *Connection
-	db         string
+	connection *Connection
+	db_name    string
 }
 
 type DataSet struct {
-	DB         *Database
-	Name       string
+	db         *Database
+	table_name string
 }
 
 /*
@@ -65,21 +65,21 @@ func(database *Database) C(table string) *DataSet {
 }
 
 func(database *Database) new() {
-	database.Connection.MySQL = mymy.New(proto, laddr, raddr, user, pass, database.db)
+	database.connection.MySQL = mymy.New(proto, laddr, raddr, user, pass, database.db_name)
 }
 
 func(database *Database) close() {
-	database.Connection.Close()
+	database.connection.Close()
 }
 
 func(database *Database) Query(query string) interface{} {
 	database.new()
-	if err := database.Connection.Connect() ; err != nil {
+	if err := database.connection.Connect() ; err != nil {
 		panic("cannot connect")
 	}
 	defer database.close()
 	
-	rows, _, err := database.Connection.MySQL.Query(query)
+	rows, _, err := database.connection.MySQL.Query(query)
 	
 	if err != nil {
 		panic(err)
@@ -87,31 +87,31 @@ func(database *Database) Query(query string) interface{} {
 	
 	return rows
 }
-/*
-func(m *Connection) insert(p interface{}, table string) (interface{}, bool) {
-	m.new()
-	if err := m.Connect() ; err != nil {
+
+func(dataset *DataSet) Insert(p interface{}) (interface{}, bool) {
+	dataset.db.new()
+	if err := dataset.db.connection.Connect() ; err != nil {
 		panic("cannot connect")
 	}
-	defer m.close()
+	defer dataset.db.close()
 	
 	data := p.(map[string]string)
-	rows, _, _ := m.MySQL.Query("SELECT * FROM " + table)
+	rows, _, _ := dataset.db.connection.MySQL.Query("SELECT * FROM " + dataset.table_name)
 	
-	query := "INSERT INTO " + table + "(id, email, name, password) VALUES (" + strconv.Itoa(len(rows)+1)
+	query := "INSERT INTO " + dataset.table_name + "(id, email, name, password) VALUES (" + strconv.Itoa(len(rows)+1)
 	for _, value := range data {
 		query += "," + "'" + value + "'"
 	}
 	query += ")"
 	
-	_, _, err := m.MySQL.Query(query)
+	_, _, err := dataset.db.connection.MySQL.Query(query)
 	if(err != nil) {
 		return err, false
 	}
 	
 	return nil, true
 }
-
+/*
 func(m *Connection) get(id string) interface{} {
 	rows := m.Query("SELECT * FROM User WHERE id=" + id).([]*mymy.Row)
 	

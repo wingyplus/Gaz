@@ -10,8 +10,7 @@ import (
 
 
 func TestQuery(t *testing.T) {
-	conn := new(Connection)
-	db := conn.DB("test")
+	db := new(Connection).DB("test")
 	rows := db.Query("select * from User").([]*mymy.Row)
 	
 	for _, row := range rows {
@@ -22,17 +21,17 @@ func TestQuery(t *testing.T) {
 	}
 }
 
-/*
+
 func TestInsert(t *testing.T) {
-	conn := new(Connection)
+	dataset := new(Connection).DB("test").C("User")
 	data := map[string]string {"name":"grean", "password":"1234", "email":"hello@grean.com"}
 	
-	err, ok := conn.Insert(data, "User")
+	err, ok := dataset.Insert(data)
 	if !ok {
 		panic(err)
 	}
 }
-
+/*
 func TestGet(t *testing.T) {
 	conn := new(Connection)
 	row := conn.Get("1").(*mymy.Row)
