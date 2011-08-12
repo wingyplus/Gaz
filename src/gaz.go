@@ -57,11 +57,11 @@ func (database Database) C(name string) Collection {
 */
 
 func(m *Connection) DB(db string) Databases {
-	return &DataStore{m, db}
+	return &Database{m, db}
 }
 
 func(datastore *Database) C(table string) DataSet {
-	return &Database{datastore, table}
+	return &DataSet{datastore, table}
 }
 
 func(m *Connection) new() {
