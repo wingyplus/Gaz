@@ -56,9 +56,13 @@ func (database Database) C(name string) Collection {
 }
 */
 
-func(m *MySql) DB(db string) Database {}
+func(m *Connection) DB(db string) DataStore {
+	return &DataStore{m, db}
+}
 
-func(m *MySql) C(table string) DataSet {}
+func(datastore *DataStore) C(table string) Database {
+	return &Database{datastore, table}
+}
 
 func(m *Connection) new() {
 	m.MySQL = mymy.New(proto, laddr, raddr, user, pass, db)
@@ -123,4 +127,3 @@ func(m *Connection) FindOne(p Params) interface{} {
 	rows := m.Query(query).([]*mymy.Row)
 	return rows[0]
 }
-
