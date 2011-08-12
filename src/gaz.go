@@ -3,7 +3,7 @@ package gaz
 import "strconv"
 import mymy "github.com/ziutek/mymysql"
 
-type MySql struct {
+type Connection struct {
 	*mymy.MySQL
 }
 
@@ -18,15 +18,15 @@ const (
 	db       = "test"
 )
 
-func(m *MySql) new() {
+func(m *Connection) new() {
 	m.MySQL = mymy.New(proto, laddr, raddr, user, pass, db)
 }
 
-func(m *MySql) close() {
+func(m *Connection) close() {
 	m.Close()
 }
 
-func(m *MySql) Query(query string) interface{} {
+func(m *Connection) Query(query string) interface{} {
 	m.new()
 	if err := m.Connect() ; err != nil {
 		panic("cannot connect")
@@ -42,7 +42,7 @@ func(m *MySql) Query(query string) interface{} {
 	return rows
 }
 
-func(m *MySql) Insert(p interface{}) (interface{}, bool) {
+func(m *Connection) Insert(p interface{}) (interface{}, bool) {
 	m.new()
 	if err := m.Connect() ; err != nil {
 		panic("cannot connect")
@@ -66,13 +66,13 @@ func(m *MySql) Insert(p interface{}) (interface{}, bool) {
 	return nil, true
 }
 
-func(m *MySql) Get(id string) interface{} {
+func(m *Connection) Get(id string) interface{} {
 	rows := m.Query("SELECT * FROM User WHERE id=" + id).([]*mymy.Row)
 	
 	return rows[0]
 }
 
-func(m *MySql) FindOne(p Params) interface{} {
+func(m *Connection) FindOne(p Params) interface{} {
 	query := "SELECT * FROM User WHERE "
 	for key, value := range p {
 		query += key + "='" + value.(string) + "'"
