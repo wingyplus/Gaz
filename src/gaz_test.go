@@ -21,7 +21,6 @@ func TestQuery(t *testing.T) {
 	}
 }
 
-
 func TestInsert(t *testing.T) {
 	dataset := new(Connection).DB("test").C("User")
 	data := map[string]string {"name":"grean", "password":"1234", "email":"hello@grean.com"}
@@ -43,4 +42,8 @@ func TestFindOne(t *testing.T) {
 	dataset := new(Connection).DB("test").C("User")
 	row := dataset.FindOne(Params{"name":"grean"}).(*mymy.Row)
 	assert.Equal(t, "hello1@grean.com", row.Str(3))
+}
+
+func TestExtractField(t *testing.T) {
+	
 }

@@ -27,8 +27,8 @@ const (
 	pass     = "root"
 )
 
-func(m *Connection) DB(db string) *Database {
-	return &Database{m, db}
+func(conn *Connection) DB(db string) *Database {
+	return &Database{conn, db}
 }
 
 func(database *Database) C(table string) *DataSet {
@@ -57,6 +57,12 @@ func(database *Database) Query(query string) interface{} {
 	}
 	
 	return rows
+}
+
+// extractField is return Field and Data_Types of Table
+func(dataset *DataSet) extractField() map[string]string {
+	
+	return map[string]string{"true":"true"}
 }
 
 func(dataset *DataSet) Insert(p interface{}) (interface{}, bool) {
