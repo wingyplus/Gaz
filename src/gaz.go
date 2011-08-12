@@ -7,13 +7,13 @@ type Connection struct {
 	*mymy.MySQL
 }
 
-type DataStore struct {
+type Database struct {
 	Connection *Connection
 	name       string
 }
 
-type Database struct {
-	DB         DataStore
+type DataSet struct {
+	DB         Database
 	Name       string
 }
 
@@ -56,11 +56,11 @@ func (database Database) C(name string) Collection {
 }
 */
 
-func(m *Connection) DB(db string) DataStore {
+func(m *Connection) DB(db string) Databases {
 	return &DataStore{m, db}
 }
 
-func(datastore *DataStore) C(table string) Database {
+func(datastore *Database) C(table string) DataSet {
 	return &Database{datastore, table}
 }
 
