@@ -24,6 +24,10 @@ const (
 	db       = "test"
 )
 
+func(m *MySql) DB(db string) Database {}
+
+func(m *MySql) C(table string) DataSet {}
+
 func(m *Connection) new() {
 	m.MySQL = mymy.New(proto, laddr, raddr, user, pass, db)
 }
