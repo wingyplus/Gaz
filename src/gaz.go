@@ -111,13 +111,13 @@ func(dataset *DataSet) Insert(p interface{}) (interface{}, bool) {
 	
 	return nil, true
 }
-/*
-func(m *Connection) get(id string) interface{} {
-	rows := m.Query("SELECT * FROM User WHERE id=" + id).([]*mymy.Row)
+
+func(dataset *DataSet) Get(id string) interface{} {
+	rows := dataset.db.Query("SELECT * FROM " + dataset.table_name + " WHERE id=" + id).([]*mymy.Row)
 	
 	return rows[0]
 }
-
+/*
 func(m *Connection) findOne(p Params) interface{} {
 	query := "SELECT * FROM User WHERE "
 	for key, value := range p {

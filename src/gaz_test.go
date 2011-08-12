@@ -3,7 +3,7 @@ package gaz
 import (	
 	"fmt"
 	"testing"
-	//"github.com/bmizerany/assert"
+	"github.com/bmizerany/assert"
 	mymy "github.com/ziutek/mymysql"
 )
 
@@ -31,14 +31,14 @@ func TestInsert(t *testing.T) {
 		panic(err)
 	}
 }
-/*
+
 func TestGet(t *testing.T) {
-	conn := new(Connection)
-	row := conn.Get("1").(*mymy.Row)
+	dataset := new(Connection).DB("test").C("User")
+	row := dataset.Get("1").(*mymy.Row)
 	assert.Equal(t, "barzaar", row.Str(1))
 	assert.Equal(t, "hello@bazaar.com", row.Str(3))
 }
-
+/*
 func TestFindOne(t *testing.T) {
 	conn := new(Connection)
 	row := conn.FindOne(Params{"name":"grean"}).(*mymy.Row)
