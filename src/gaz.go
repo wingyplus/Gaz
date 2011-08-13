@@ -1,6 +1,6 @@
 package gaz
 
-import "strconv"
+import "strings"
 import mymy "github.com/ziutek/mymysql"
 
 type Connection struct {
@@ -71,20 +71,24 @@ func(dataset *DataSet) extractField() map[string]string {
 
 func(dataset *DataSet) Insert(p interface{}) (interface{}, bool) {
 	dataset.db.new()
+	
+	field := dataset.extractField()
+	data := p.(map[string]string)
+	
+	var sub_query, data_query string
+	for key, _ := range field {
+		if key == "id" {
+			continue
+		}
+		sub_query += key + " "
+		data_query += "'" + data[key] + "' " 
+	}
+	query := "INSERT INTO " + dataset.table_name + "(" + strings.Replace(strings.Replace(sub_query, " ", ",", len(field)-2), " ", "", -1) + ") VALUES (" + strings.Replace(strings.Replace(data_query, " ", ",", len(field)-2), " ", "", -1) + ")"
+
 	if err := dataset.db.connection.Connect() ; err != nil {
 		panic("cannot connect")
 	}
 	defer dataset.db.close()
-	
-	data := p.(map[string]string)
-	rows, _, _ := dataset.db.connection.MySQL.Query("SELECT * FROM " + dataset.table_name)
-	
-	query := "INSERT INTO " + dataset.table_name + "(id, email, name, password) VALUES (" + strconv.Itoa(len(rows)+1)
-	for _, value := range data {
-		query += "," + "'" + value + "'"
-	}
-	query += ")"
-	
 	_, _, err := dataset.db.connection.MySQL.Query(query)
 	if(err != nil) {
 		return err, false

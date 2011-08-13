@@ -7,8 +7,6 @@ import (
 	mymy "github.com/ziutek/mymysql"
 )
 
-
-
 func TestQuery(t *testing.T) {
 	db := new(Connection).DB("test")
 	rows := db.Query("select * from User").([]*mymy.Row)
@@ -26,9 +24,8 @@ func TestInsert(t *testing.T) {
 	data := map[string]string {"name":"grean", "password":"1234", "email":"hello@grean.com"}
 	
 	err, ok := dataset.Insert(data)
-	if !ok {
-		panic(err)
-	}
+	assert.Equal(t, true, ok)
+	assert.Equal(t, nil, err)
 }
 
 func TestGet(t *testing.T) {
