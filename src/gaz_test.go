@@ -45,5 +45,10 @@ func TestFindOne(t *testing.T) {
 }
 
 func TestExtractField(t *testing.T) {
-	
+	dataset := new(Connection).DB("test").C("User")
+	field := dataset.extractField()
+	assert.Equal(t, "int(11)", field["id"])
+	assert.Equal(t, "varchar(40)", field["name"])
+	assert.Equal(t, "varchar(10)", field["password"])
+	assert.Equal(t, "varchar(100)", field["email"])
 }

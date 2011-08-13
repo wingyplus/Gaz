@@ -60,9 +60,8 @@ func(database *Database) Query(query string) interface{} {
 }
 
 // extractField is return Field and Data_Types of Table
-func(dataset *DataSet) extractField(name string) map[string]string {
-	dataset := new(Connection).DB("test").C("User")
-	rows := dataset.db.Query("DESC " + name).([]*mymy.Row)
+func(dataset *DataSet) extractField() map[string]string {
+	rows := dataset.db.Query("DESC " + dataset.table_name).([]*mymy.Row)
 	field := make(map[string]string)
 	for _, row := range rows {
 		field[row.Str(0)] = row.Str(1)
