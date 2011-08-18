@@ -2,7 +2,6 @@ package gaz
 
 import r "reflect"
 import "strconv"
-//import "dump"
 /*
 const mapping = map[string]string {
 	"VARCHAR": "string",

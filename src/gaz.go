@@ -1,8 +1,6 @@
 package gaz
 
-import "strings"
 import mymy "github.com/ziutek/mymysql"
-import "fmt"
 
 type Connection struct {
 	*mymy.MySQL
@@ -73,17 +71,23 @@ func(dataset *DataSet) extractField() map[string]string {
 func(dataset *DataSet) Insert(p interface{}) (interface{}, bool) {
 	field := dataset.extractField()
 	data := maptype(p.(map[string]interface{}))
-	
+	count := 0
 	var sub_query, data_query string
 	for key, _ := range field {
 		if key == "id" {
+			count++
 			continue
 		}
-		sub_query += key + " "
-		data_query += data[key] + " " 
+		if count == len(field)-1 {
+			sub_query += key
+			data_query += data[key]
+		} else {
+			count++
+			sub_query += key + ","
+			data_query += data[key] + ","
+		}
 	}
-	query := "INSERT INTO " + dataset.Table_name + "(" + strings.Replace(strings.Replace(sub_query, " ", ",", len(field)-2), " ", "", -1) + ") VALUES (" + strings.Replace(strings.Replace(data_query, " ", ",", len(field)-2), " ", "", -1) + ")"
-	fmt.Println(query)
+	query := "INSERT INTO " + dataset.Table_name + "(" + sub_query + ") VALUES (" + data_query + ")"
 	
 	dataset.Db.new()
 	if err := dataset.Db.Connection.Connect() ; err != nil {
