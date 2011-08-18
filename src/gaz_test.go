@@ -21,7 +21,7 @@ func TestQuery(t *testing.T) {
 
 func TestInsert(t *testing.T) {
 	dataset := new(Connection).DB("test").C("User")
-	data := map[string]string {"name":"grean", "password":"1234", "email":"hello@grean.com"}
+	data := map[string]interface{} {"email":"hello@grean.com", "name":"grean", "password":"1234"}
 	
 	err, ok := dataset.Insert(data)
 	assert.Equal(t, true, ok)
@@ -48,4 +48,12 @@ func TestExtractField(t *testing.T) {
 	assert.Equal(t, "varchar(40)", field["name"])
 	assert.Equal(t, "varchar(10)", field["password"])
 	assert.Equal(t, "varchar(100)", field["email"])
+}
+
+func TestMappingData(t *testing.T) {
+	test_data := map[string]interface{} {"id":1, "username": "hylo", "score":1.23}
+	result := maptype(test_data)
+	assert.Equal(t, "'hylo'", result["username"])
+	assert.Equal(t, "1", result["id"])
+	assert.Equal(t, "1.23", result["score"])
 }

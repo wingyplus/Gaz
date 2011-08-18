@@ -2,19 +2,20 @@ package gaz
 
 import "strings"
 import mymy "github.com/ziutek/mymysql"
+import "fmt"
 
 type Connection struct {
 	*mymy.MySQL
 }
 
 type Database struct {
-	connection *Connection
-	db_name    string
+	Connection *Connection
+	Db_name    string
 }
 
 type DataSet struct {
-	db         Database
-	table_name string
+	Db         Database
+	Table_name string
 }
 
 type Params map[string]interface{}
@@ -27,8 +28,8 @@ const (
 	pass     = "root"
 )
 
-func(conn *Connection) DB(db string) Database {
-	return Database{conn, db}
+func(conn *Connection) DB(Db string) Database {
+	return Database{conn, Db}
 }
 
 func(database Database) C(table string) DataSet {
@@ -36,21 +37,21 @@ func(database Database) C(table string) DataSet {
 }
 
 func(database *Database) new() {
-	database.connection.MySQL = mymy.New(proto, laddr, raddr, user, pass, database.db_name)
+	database.Connection.MySQL = mymy.New(proto, laddr, raddr, user, pass, database.Db_name)
 }
 
 func(database *Database) close() {
-	database.connection.Close()
+	database.Connection.Close()
 }
 
 func(database *Database) Query(query string) interface{} {
 	database.new()
-	if err := database.connection.Connect() ; err != nil {
+	if err := database.Connection.Connect() ; err != nil {
 		panic("cannot connect")
 	}
 	defer database.close()
 	
-	rows, _, err := database.connection.MySQL.Query(query)
+	rows, _, err := database.Connection.MySQL.Query(query)
 	
 	if err != nil {
 		panic(err)
@@ -61,7 +62,7 @@ func(database *Database) Query(query string) interface{} {
 
 // extractField is return Field and Data_Types of Table
 func(dataset *DataSet) extractField() map[string]string {
-	rows := dataset.db.Query("DESC " + dataset.table_name).([]*mymy.Row)
+	rows := dataset.Db.Query("DESC " + dataset.Table_name).([]*mymy.Row)
 	field := make(map[string]string)
 	for _, row := range rows {
 		field[row.Str(0)] = row.Str(1)
@@ -70,10 +71,8 @@ func(dataset *DataSet) extractField() map[string]string {
 }
 
 func(dataset *DataSet) Insert(p interface{}) (interface{}, bool) {
-	dataset.db.new()
-	
 	field := dataset.extractField()
-	data := p.(map[string]string)
+	data := maptype(p.(map[string]interface{}))
 	
 	var sub_query, data_query string
 	for key, _ := range field {
@@ -81,15 +80,17 @@ func(dataset *DataSet) Insert(p interface{}) (interface{}, bool) {
 			continue
 		}
 		sub_query += key + " "
-		data_query += "'" + data[key] + "' " 
+		data_query += data[key] + " " 
 	}
-	query := "INSERT INTO " + dataset.table_name + "(" + strings.Replace(strings.Replace(sub_query, " ", ",", len(field)-2), " ", "", -1) + ") VALUES (" + strings.Replace(strings.Replace(data_query, " ", ",", len(field)-2), " ", "", -1) + ")"
-
-	if err := dataset.db.connection.Connect() ; err != nil {
+	query := "INSERT INTO " + dataset.Table_name + "(" + strings.Replace(strings.Replace(sub_query, " ", ",", len(field)-2), " ", "", -1) + ") VALUES (" + strings.Replace(strings.Replace(data_query, " ", ",", len(field)-2), " ", "", -1) + ")"
+	fmt.Println(query)
+	
+	dataset.Db.new()
+	if err := dataset.Db.Connection.Connect() ; err != nil {
 		panic("cannot connect")
 	}
-	defer dataset.db.close()
-	_, _, err := dataset.db.connection.MySQL.Query(query)
+	defer dataset.Db.close()
+	_, _, err := dataset.Db.Connection.MySQL.Query(query)
 	if(err != nil) {
 		return err, false
 	}
@@ -98,18 +99,18 @@ func(dataset *DataSet) Insert(p interface{}) (interface{}, bool) {
 }
 
 func(dataset *DataSet) Get(id string) interface{} {
-	rows := dataset.db.Query("SELECT * FROM " + dataset.table_name + " WHERE id=" + id).([]*mymy.Row)
+	rows := dataset.Db.Query("SELECT * FROM " + dataset.Table_name + " WHERE id=" + id).([]*mymy.Row)
 	
 	return rows[0]
 }
 
 func(dataset *DataSet) FindOne(p Params) interface{} {
-	query := "SELECT * FROM " + dataset.table_name + " WHERE "
+	query := "SELECT * FROM " + dataset.Table_name + " WHERE "
 	for key, value := range p {
 		query += key + "='" + value.(string) + "'"
 	}
 	
-	rows := dataset.db.Query(query).([]*mymy.Row)
+	rows := dataset.Db.Query(query).([]*mymy.Row)
 	return rows[0]
 }
 
